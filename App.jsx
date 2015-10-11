@@ -1,4 +1,11 @@
 App = React.createClass({
+  // mixin makes the getMeteorData work
+  mixins: [ReactMeteorData],
+  getMeteorData() {
+    return {
+      tasks: Tasks.find({}).fetch()
+    }
+  },
   getTasks() {
     return [
       { _id: 1, text: "This is task 1"},
@@ -7,15 +14,31 @@ App = React.createClass({
     ];
   },
   renderTasks() {
-    return this.getTasks().map((task) => {
+    return this.data.tasks.map((task) => {
       return <Task key={task._id} task={task} />
     });
   },
+  handleSubmit(event) {
+    event.preventDefault();
+    var text = React.findDOMNode(this.refs.textInput).value.trim();
+    Tasks.insert({
+      text: text,
+      createdAt: new Date()
+    });
+    React.findDOMNode(this.refs.textInput).value = "";
+  },
   render() {
     return (
-      <div class="container">
+      <div className="container">
         <header>
           <h1>My Todos</h1>
+
+          <form className="new-task" onSubmit={this.handleSubmit} >
+            <input
+              type="text"
+              ref="textInput"
+              placeholder="Type to add new tasks" />
+          </form>
         </header>
 
         <ul>
