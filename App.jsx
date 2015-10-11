@@ -13,7 +13,7 @@ App = React.createClass({
   },
   render() {
     return (
-      <div>
+      <div class="container">
         <header>
           <h1>My Todos</h1>
         </header>
